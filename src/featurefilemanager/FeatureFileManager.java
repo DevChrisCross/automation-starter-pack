@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -43,12 +44,21 @@ public class FeatureFileManager extends Application {
         Scene scene = new Scene(root);
         Button button = (Button) scene.lookup("#searchButton");
         button.setOnAction((ActionEvent event) -> {
-//            FeatureTreeView.populateFeatureDirectory(stage, scene);
+             TreeView<File> featureTree = (TreeView) scene.lookup("#featureDirectory");
+             TabPane featureDisplay = (TabPane) scene.lookup("#outputWindow");
+             File directory = FileDirectoryManager.askDirectory(stage);
+            try {
+                FeatureTreeView.buildFileDirectory(featureTree, directory, featureDisplay);
+            } catch (IOException ex) {
+                Logger.getLogger(FeatureFileManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         stage.setScene(scene);
         stage.show();
     }
+    
+    
     
     /**
      * @param args the command line arguments

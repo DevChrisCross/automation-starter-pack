@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Chris/Documents/NetBeansProjects/FeatureFileManager/src/featurefilemanager/FXMLDocument.fxml</file>
-            <file>file:/C:/Users/Chris/Documents/NetBeansProjects/FeatureFileManager/src/featurefilemanager/FXMLDocumentController.java</file>
-            <file>file:/C:/Users/Chris/Documents/NetBeansProjects/FeatureFileManager/src/featurefilemanager/FeatureTreeView.java</file>
-            <file>file:/C:/Users/Chris/Documents/NetBeansProjects/FeatureFileManager/src/featurefilemanager/FeatureFileManager.java</file>
-            <file>file:/C:/Users/Chris/Documents/NetBeansProjects/FeatureFileManager/src/featurefilemanager/Step.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

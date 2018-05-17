@@ -7,10 +7,15 @@ package featurefilemanager;
 
 import java.io.File;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -19,22 +24,29 @@ import javafx.scene.input.KeyEvent;
 public final class FeatureTreeCell extends TreeCell<File> {
 
     private TextField textField;
+    private TabPane tabPane;
     private final ContextMenu contextMenu;
     
-    public FeatureTreeCell() {
-        contextMenu = new FeatureTreeContextMenu(this);
+    public FeatureTreeCell(TabPane tabPane) {
+        this.tabPane = tabPane;
+        this.contextMenu = new FeatureTreeContextMenu(this);
+        this.setOnMouseClicked((MouseEvent event) -> {
+            openFileInTab(event);
+        });
     }   
        
-    @Override
-    public void startEdit() {
-        super.startEdit();
-        if (textField == null) {
-            createTextField();
-        }
-        setText(null);
-        setGraphic(textField);
-        textField.selectAll();
-    }
+//    @Override
+//    public void startEdit() {
+//        super.startEdit();
+//        Tab tab = new FeatureTab("name");
+//        tabPane.getTabs().add(tab);
+//        if (textField == null) {
+//            createTextField();
+//        }
+//        setText(null);
+//        setGraphic(textField);
+//        textField.selectAll();
+//    }
 
     @Override
     public void cancelEdit() {
@@ -77,5 +89,17 @@ public final class FeatureTreeCell extends TreeCell<File> {
                 cancelEdit();
             }
         });
+    }
+    
+    private void openFileInTab(MouseEvent event) {
+        if(event.getButton().equals(MouseButton.PRIMARY)){
+            if(event.getClickCount() == 2 && getTreeItem().getValue().isFile()){
+                TreeItem<File> currentTreeItem = getTreeItem();
+                File currentFile = currentTreeItem.getValue();
+                Tab tab = new FeatureTab(currentFile.getName());
+                tabPane.getTabs().add(tab);
+                // TODO: make a singular tab per file
+            }
+        }
     }
 }

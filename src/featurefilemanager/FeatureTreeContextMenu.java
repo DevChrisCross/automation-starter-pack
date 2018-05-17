@@ -7,6 +7,7 @@ package featurefilemanager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 /**
  *
@@ -38,28 +38,33 @@ public class FeatureTreeContextMenu extends ContextMenu{
 //        this.setMaxWidth(USE_PREF_SIZE);
 //        this.setWidth(1000.0);
 //        this.setPrefWidth(1000.0);
+        // TODO: transfer rename to context menu
+        // TODO: prevent double file tree creation
       
         MenuItem addFeatureFileItem = new MenuItem("Feature File");
         MenuItem addFolderItem = new MenuItem("Folder");
-        Menu newMenu = new Menu("New", null, addFeatureFileItem, addFolderItem);
+        MenuItem editItem = new MenuItem("Edit");
         MenuItem cutItem = new MenuItem("Cut");
         MenuItem copyItem = new MenuItem("Copy");
         MenuItem pasteItem = new MenuItem("Paste");
         MenuItem renameItem = new MenuItem("Rename");
         MenuItem deleteItem = new MenuItem("Delete");
+        Menu newMenu = new Menu("New", null, addFeatureFileItem, addFolderItem);
 
         addFeatureFileItem.setOnAction((ActionEvent event) -> { generateFile(event, "feature"); });
         addFolderItem.setOnAction((ActionEvent event) -> { generateFile(event, "folder"); });
         renameItem.setOnAction((ActionEvent event) -> { generateFile(event, "rename"); });
         deleteItem.setOnAction((ActionEvent event) -> { deleteFile(); });
         
+        KeyCombination cutShorcut = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
         KeyCombination renameShorcut = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
         KeyCombination deleteShorcut = new KeyCodeCombination(KeyCode.DELETE);
+        
         renameItem.setAccelerator(renameShorcut);
         deleteItem.setAccelerator(deleteShorcut);
         
         this.getItems().addAll(
-                newMenu,
+                newMenu, editItem,
                 new SeparatorMenuItem(),
                 cutItem, copyItem, pasteItem,
                 new SeparatorMenuItem(),
@@ -67,7 +72,7 @@ public class FeatureTreeContextMenu extends ContextMenu{
         );
     }
     
-    public void generateFile(ActionEvent event, String key) {
+    private void generateFile(ActionEvent event, String key) {
         Optional<String> fileName = askNameOf(key);
         fileName.ifPresent((String name) -> {
             switch(key) {
@@ -84,7 +89,7 @@ public class FeatureTreeContextMenu extends ContextMenu{
         });
     }
     
-    public Optional<String> askNameOf(String name) {
+    private Optional<String> askNameOf(String name) {
         TextInputDialog textInputDialog = new TextInputDialog();
         textInputDialog.setGraphic(null);
         textInputDialog.setHeaderText(null);
@@ -100,7 +105,7 @@ public class FeatureTreeContextMenu extends ContextMenu{
         return textInputDialog.showAndWait();
     }
     
-    public void createNewFeatureFile(String name) {
+    private void createNewFeatureFile(String name) {
         TreeItem<File> currentTreeItem = ftCell.getTreeItem();
         String currentPath = currentTreeItem.getValue().getAbsolutePath();
         name = name.endsWith(".feature") ? name : name + ".feature";
@@ -114,7 +119,7 @@ public class FeatureTreeContextMenu extends ContextMenu{
         }
     }
     
-    public void createNewFolder(String name) {
+    private void createNewFolder(String name) {
         TreeItem<File> currentTreeItem = ftCell.getTreeItem();
         String currentPath = currentTreeItem.getValue().getAbsolutePath();
         File newFolder = new File(currentPath + "\\" + name);
@@ -123,13 +128,13 @@ public class FeatureTreeContextMenu extends ContextMenu{
         newFolder.mkdir();
     }
     
-    public void renameFile(String name) {
+    private void renameFile(String name) {
         File renamedFile = new File(name);
         ftCell.getTreeItem().getValue().renameTo(renamedFile);
         ftCell.getTreeItem().setValue(renamedFile);
     }
     
-    public void deleteFile() {
+    private void deleteFile() {
         TreeItem<File> currentTreeItem = ftCell.getTreeItem();
         File currentFile = currentTreeItem.getValue();
         boolean isItemRemoved = currentTreeItem.getParent()
